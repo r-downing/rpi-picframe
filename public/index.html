@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            background-color: black;
+        }
+
+        .bg {
+            /* The image used */
+            background-image: url("img_girl.jpg");
+
+            /* Full height */
+
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+    </style>
+    <script>
+        updatePicture = function(){
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("pic").style.backgroundImage = "url('" + this.responseText + "')"
+                }
+            };
+            xhttp.open("GET", "next_picture", true);
+            xhttp.send();
+        }
+        setInterval(updatePicture, 20000);
+        updatePicture();
+
+    </script>
+</head>
+
+<body class="bg" id="pic">
+
+    <div></div>
+
+</body>
+
+</html>
