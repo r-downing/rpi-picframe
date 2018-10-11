@@ -12,29 +12,35 @@
         }
 
         .bg {
-            /* The image used */
-            background-image: url("img_girl.jpg");
-
-            /* Full height */
-
-
-            /* Center and scale the image nicely */
             background-position: center;
             background-repeat: no-repeat;
             background-size: contain;
         }
     </style>
     <script>
-        updatePicture = function(){
+
+        get = function(url, callback) {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("pic").style.backgroundImage = "url('" + this.responseText + "')"
+                    callback(this);
                 }
             };
-            xhttp.open("GET", "next_picture", true);
+            xhttp.open("GET", url, true);
             xhttp.send();
-        }
+        };
+
+        updatePicture = function(){
+            //get the url for the next picture
+            get("next_picture", function(xh){
+                //load the picture in the background from the url
+                get(xh.responseText, function(xh2){
+                    //set the picture as the background image. it's already cached so there should be no lag
+                    document.getElementById("pic").style.backgroundImage = "url('" + xh.responseText + "')";
+                })
+            });
+
+        };
         setInterval(updatePicture, 20000);
         updatePicture();
 

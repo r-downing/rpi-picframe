@@ -26,7 +26,7 @@ def watch_bulb():
             print('error' +repr(e))
 
 
-Thread(target=watch_bulb).start()
+Thread(target=watch_bulb, daemon=True).start()
 
 
 class PictureFrameServer:
