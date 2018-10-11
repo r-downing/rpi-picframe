@@ -35,6 +35,7 @@ class PictureFrameServer:
         self.index = 'index.html'
         self.generate_index = True
         self.pictures = None
+        self.recent_uploads = []
 
     @cherrypy.expose
     def upload_picture(self):
@@ -54,15 +55,18 @@ class PictureFrameServer:
     def upload(self, myFile, url):
         if url:
             r = requests.get(url, allow_redirects=True)
-            open('public/pictures/' + url.split('?')[0].split('/')[-1], 'wb').write(r.content)
+            filename = 'pictures/' + url.split('?')[0].split('/')[-1]
+            open('public/'+filename, 'wb').write(r.content)
         elif myFile:
-            open('public/pictures/' + myFile.filename, 'wb').write(myFile.file.read())
-
+            filename = 'pictures/' + myFile.filename
+            open('public/'+filename, 'wb').write(myFile.file.read())
+        self.recent_uploads.append(filename)
         raise cherrypy.HTTPRedirect('upload_picture')
-        return "done"
 
     @cherrypy.expose
     def next_picture(self):
+        if self.recent_uploads:
+            return self.recent_uploads.pop(0)
         if not self.pictures:
             self.pictures = os.listdir('public/pictures')
             random.shuffle(self.pictures)
